@@ -31,6 +31,7 @@
             echo "<p>Son iguales, tienen el mismo valor</p>";
         }
 
+        //si variables son superiores a 1 calcular area del triangulo
         if($a && $b > 1) {
             $area = ($a * $b) / 2;
             echo "<p>El area del triangulo es " . $area . "cm</p>";
