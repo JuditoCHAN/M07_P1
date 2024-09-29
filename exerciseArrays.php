@@ -2,7 +2,7 @@
 <html>
     <head></head>
     <body>
-        <h1>Exercise Arrays</h1>
+        <h1>Ejercicios Arrays</h1>
         <?php
         //Crear array asociativo
         $datos = array("Nombre" => "Sara", "Apellido" => "Martínez", "Edad" => 23, "Ciudad" => "Barcelona");
@@ -82,7 +82,7 @@
         $notasMayoresMedia = [];
         foreach($arrayNotas as $key => $value) {
             if($value > $media) {
-                array_push($notasMayoresMedia, $key);
+                array_push($notasMayoresMedia, $key); //guardamos los alumnos con nota superior a la media en un array 
             }
         }
 
@@ -94,11 +94,17 @@
 
         //-----------------------------------------------------------------------------------------------------
         //busca la nota más alta y muestrala junto con el nombre
-        echo "<br><br><h2>Ejercicio 8</h2>";
+        echo "<br><h2>Ejercicio 8</h2>";
         $notaMasAlta = 0;
+        $nombreNotaMasAlta = "";
         foreach($arrayNotas as $key => $value) {
-            if($value > $notaMasAlta)
+            if($value > $notaMasAlta) { //solo entra 1 vez ya que el array se ordenó de manera descendiente
+                $notaMasAlta = $value;
+                //echo $key . " -> " . $value . "<br>";
+                $nombreNotaMasAlta = $key;
+            }
         }
+        echo "La nota más alta es " . $notaMasAlta . " y el mejor alumno es " . $nombreNotaMasAlta;
 
         ?>
     </body>
