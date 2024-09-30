@@ -13,8 +13,9 @@
     <?php
 
     //if($_SERVER["REQUEST_METHOD"] == "GET") {
-        
-    if(isset($_SESSION["worker_name"])) {
+    $error_quantity = 0;
+
+    if(isset($_SESSION["worker_name"])) { //si existe $worker_name es que ya se envío el form
         if(isset($_GET["add"])) {
             $_SESSION["worker_name"] = test_data($_GET["worker_name"]);
             $_SESSION["product"] = test_data($_GET["product"]);
@@ -28,11 +29,26 @@
         }
     
         if(isset($_GET["remove"])) {
-    
+            if($_SESSION["product"] == "soft_drink") { //strcmp() tmb se puede usar, diferencia mayus y minus
+                if($_GET["product_quantity"] > $_SESSION["soft_drinks"]) {
+                    $error_quantity = 1;
+                } else {
+                    $_SESSION["soft_drinks"] -= $_GET["product_quantity"];
+                }
+            }
+            if($_SESSION["product"] == "milk") {
+                if($_GET["product_quantity"] > $_SESSION["milk"]) {
+                    $error_quantity = 2;
+                } else {
+                    $_SESSION["milk"] -= $_GET["product_quantity"];
+                }
+            }
         }
     
         if(isset($_GET["reset"])) {
-    
+            $_SESSION["worker_name"] =  $_SESSION["product"] = "";
+            $_SESSION["soft_drinks"] = 0;
+            $_SESSION["milk"] = 0;
         }
 
     } else {
@@ -65,12 +81,22 @@
         </select>
 
         <label for="product_quantity"><h2>Product quantity:</h2></label>
-        <input type="number" name="product_quantity" id="product_quantity" min="0" max="999" required>
+        <input type="number" name="product_quantity" id="product_quantity" min="0" max="999" value="1" required>
         
         <button type="submit" name="add">add</button>
         <button type="submit" name="remove">remove</button>
         <button type="submit" name="reset">reset</button>
     </form>
+
+    <div style="color: red"><?php if($error_quantity != 0) {
+        if($error_quantity == 1) {
+            echo "You can't remove more units of soft drink than there are in the inventary!";
+        } 
+        if($error_quantity == 2) {
+            echo "You can't remove more units of milk than there are in the inventary!";
+        }
+    }
+    ?></div>
 
     <h2>Inventary:</h2>
     <p>worker: <?php echo $_SESSION["worker_name"];?></p>
