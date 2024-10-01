@@ -11,11 +11,10 @@
 </head>
 <body>
     <?php
-
     //if($_SERVER["REQUEST_METHOD"] == "GET") {
     $error_quantity = 0;
 
-    if(isset($_SESSION["worker_name"])) { //si existe $worker_name es que ya se envío el form
+    if(isset($_SESSION["worker_name"])) { //la 1a vez que carga la pag no existirá la variable session y entrará en el else
         if(isset($_GET["add"])) {
             $_SESSION["worker_name"] = test_data($_GET["worker_name"]);
             $_SESSION["product"] = test_data($_GET["product"]);
@@ -29,15 +28,18 @@
         }
     
         if(isset($_GET["remove"])) {
-            if($_SESSION["product"] == "soft_drink") { //strcmp() tmb se puede usar, diferencia mayus y minus
-                if($_GET["product_quantity"] > $_SESSION["soft_drinks"]) {
+            $_SESSION["worker_name"] = test_data($_GET["worker_name"]);
+            $_SESSION["product"] = test_data($_GET["product"]);
+
+            if($_SESSION["product"] == "soft_drink") { 
+                if($_GET["product_quantity"] > $_SESSION["soft_drinks"]) { //si se intentan eliminar más unidades de las que hay...
                     $error_quantity = 1;
                 } else {
                     $_SESSION["soft_drinks"] -= $_GET["product_quantity"];
                 }
             }
             if($_SESSION["product"] == "milk") {
-                if($_GET["product_quantity"] > $_SESSION["milk"]) {
+                if($_GET["product_quantity"] > $_SESSION["milk"]) {//si se intentan eliminar más unidades de las que hay...
                     $error_quantity = 2;
                 } else {
                     $_SESSION["milk"] -= $_GET["product_quantity"];
@@ -51,7 +53,7 @@
             $_SESSION["milk"] = 0;
         }
 
-    } else {
+    } else { //aqui se entra la 1a vez que se carga la página, y se inicializan las variables session (ya que se usan en el form)
         $_SESSION["worker_name"] =  $_SESSION["product"] = "";
         $_SESSION["soft_drinks"] = 0;
         $_SESSION["milk"] = 0;
@@ -64,7 +66,6 @@
         $data = htmlspecialchars($data);
         return $data;
     }
-
     ?>
 
 
@@ -90,10 +91,10 @@
 
     <div style="color: red"><?php if($error_quantity != 0) {
         if($error_quantity == 1) {
-            echo "You can't remove more units of soft drink than there are in the inventary!";
+            echo "You can't remove more units of <b>soft drink</b> than there are in the inventary!";
         } 
         if($error_quantity == 2) {
-            echo "You can't remove more units of milk than there are in the inventary!";
+            echo "You can't remove more units of <b>milk</b> than there are in the inventary!";
         }
     }
     ?></div>
