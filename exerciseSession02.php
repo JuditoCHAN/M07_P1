@@ -11,7 +11,7 @@
 </head>
 <body>
     <?php
-
+    $avg = false;
     if(isset($_SESSION["nums"])) {
         if(isset($_POST["modify"])){
             $pos = $_POST["position"];
@@ -23,6 +23,8 @@
         }
 
         if(isset($_POST["reset"])){
+            $_SESSION["nums"] = array(10, 20, 30);
+            $_POST["new_value"] = 0;
         }
         
     } else { //si no existe el array (1a vez que carga la página)
@@ -44,7 +46,7 @@
         
         <br><br>
         <label for="new_value">New value: </label>
-        <input type="number" name="new_value" id="new_value" min="0" max="999" required>        
+        <input type="number" name="new_value" id="new_value" min="0" max="999" value="0" required>        
         
         <button type="submit" name="modify">Modify</button>
         <button type="submit" name="average">Average</button>
@@ -52,6 +54,11 @@
     </form>
 
     <p>Current array: <?php foreach($_SESSION["nums"] as $num){echo $num . ", ";}?></p>
-    <p>Average: <?php echo array_sum($_SESSION["nums"])/count($_SESSION["nums"])?></p> <!-- con array_sum() suma los valores del array -->
+    <?php 
+        if($avg) { ?>
+            <p>Average: <?php echo array_sum($_SESSION["nums"])/count($_SESSION["nums"])?></p> <?php
+        }
+    ?>
+    
 </body>
 </html>
