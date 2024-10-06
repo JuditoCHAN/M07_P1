@@ -13,7 +13,7 @@
     <?php
     $avg = false;
     if(isset($_SESSION["nums"])) {
-        if(isset($_POST["modify"])){
+        if(isset($_POST["modify"]) && isset($_POST["new_value"])){ //ponemos el isset($_POST["new_value"]) por si usuario borra el required del html (y el value por defecto, q es 0)
             $pos = $_POST["position"];
             $_SESSION["nums"][$pos] = $_POST["new_value"];
         }
@@ -22,8 +22,8 @@
             $avg = true;
         }
 
-        if(isset($_POST["reset"])){
-            $_SESSION["nums"] = array(10, 20, 30);
+        if(isset($_POST["resetSessions"])){
+            $_SESSION["nums"] = array(10, 20, 30); //volvemos a poner los valores iniciales en la variable $_SESSION["nums]
             $_POST["new_value"] = 0;
         }
         
@@ -50,7 +50,7 @@
         
         <button type="submit" name="modify">Modify</button>
         <button type="submit" name="average">Average</button>
-        <button type="submit" name="reset">Reset</button>
+        <button type="submit" name="resetSessions">Reset</button>
     </form>
 
     <p>Current array: <?php foreach($_SESSION["nums"] as $num){echo $num . ", ";}?></p>

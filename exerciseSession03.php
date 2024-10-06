@@ -21,6 +21,7 @@
     $add = false;
     $showTotalSum = false;
     $editItem = false;
+    $indexEdit = -1;
 
     if(isset($_SESSION["shoppingList"])) {
         if(isset($_POST["addItem"])) {
@@ -29,7 +30,7 @@
         }
 
         if(isset($_POST["deleteItem"])) {
-            $indexDelete = $_POST["deleteItem"];
+            $indexDelete = $_POST["deleteItem"]; //guardamos la posicion del item a borrar
             //unset($_SESSION["shoppingList"][$index_delete]);
             array_splice($_SESSION["shoppingList"], $indexDelete,1); //reordena indices, unset() no
         }
@@ -43,8 +44,16 @@
         }
 
         if(isset($_POST["editItem"])) {
-            $indexEdit = $_POST["editItem"];
+            $indexEdit = $_POST["editItem"]; //guardamos la posicion del item a editar
             $editItem = true;
+        }
+
+        if(isset($_POST["update"]) && isset($_SESSION["shoppingList"][$_POST["update"]])) { //pasamos la posición como value del "update"
+            $indexEdit = $_POST["update"];
+            $_SESSION["shoppingList"][$indexEdit]["name"] = $_POST["name"];
+            $_SESSION["shoppingList"][$indexEdit]["quantity"] = $_POST["quantity"];
+            $_SESSION["shoppingList"][$indexEdit]["price"] = $_POST["price"];
+            $_SESSION["shoppingList"][$indexEdit]["cost"] = $_POST["quantity"] * $_POST["price"];
         }
     
     } else { //si no existe el array (1a vez que carga la pag)
@@ -57,8 +66,8 @@
     <form action="" method="post">
         <label for="name">name: </label>
         <input type="text" name="name" id="name" value="<?php 
-            if($editItem) { //si el usuario ha pulsado el botón "edit"
-                echo "" . $_SESSION["shoppingList"][$indexEdit]["name"];
+            if($editItem && isset($_SESSION["shoppingList"][$indexEdit])) { //si el usuario ha pulsado el botón "edit"
+                echo "" . $_SESSION["shoppingList"][$indexEdit]["name"]; //mostramos los valores a editar en los inputs
             } else {
                 echo "";
             }
@@ -66,7 +75,7 @@
 
         <label for="quantity">quantity: </label>
         <input type="number" name="quantity" id="quantity" value="<?php 
-            if($editItem) { //si el usuario ha pulsado el botón "edit"
+            if($editItem && isset($_SESSION["shoppingList"][$indexEdit])) { //si el usuario ha pulsado el botón "edit"
                 echo "" . $_SESSION["shoppingList"][$indexEdit]["quantity"];
             } else {
                 echo "";
@@ -75,7 +84,7 @@
 
         <label for="price">price: </label>
         <input type="number" name="price" id="price" value="<?php 
-            if($editItem) { //si el usuario ha pulsado el botón "edit"
+            if($editItem && isset($_SESSION["shoppingList"][$indexEdit])) { //si el usuario ha pulsado el botón "edit"
                 echo "" . $_SESSION["shoppingList"][$indexEdit]["price"];
             } else {
                 echo "";
@@ -83,8 +92,12 @@
         ?>" required><br><br>
 
         <button type="submit" name="addItem">Add</button>
-        <button type="submit" name="update">Update</button>
-        <button type="submit" name="resetSession">Reset</button>
+        <button type="submit" name="update" value="<?php echo "" . $indexEdit ?>" <?php 
+            if(!$editItem) { //botón "update" desactivado a menos que el usuario pulse "edit" de algún item
+                echo "disabled";
+            }
+        ?>>Update</button>
+        <button type="submit" name="resetInputs">Reset</button>
     </form>
 
     <br>

@@ -3,6 +3,7 @@
     <head></head>
     <body>
         <h1>Exercise 5</h1>
+        <p>Generación de números aleatorios entre 0 y 20 hasta que su suma sea superior a 100: </p>
         <?php
         $totalSuma = 0;
         $pares = 0;
